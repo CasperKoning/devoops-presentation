@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<title>A DEVOOPS STORY: <br> <small> Breaking your entire data platform with a minor version upgrade </small></title>
+
+<meta name="description" content="A DEVOOPS STORY: <br> <small> Breaking your entire data platform with a minor version upgrade </small>">
+
+
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/wehkamp.css" id="theme">
+
+<link href='font/fira-code/fira-code.css' rel='stylesheet' type='text/css'>
+<link href='font/conduit-itc-std/conduit-itc-std.css' rel='stylesheet' type='text/css'>
+<link href="css/kbdfun.css" rel="stylesheet">
+
+<!-- For syntax highlighting -->
+  <link rel="stylesheet" href="css/dracula.css">
+
+<!-- QR Code -->
+<script src="js/qrcode.js"></script>
+
+<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+<script>
+  document.write( '<link rel="stylesheet" href="css/print/' +
+    ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) +
+    '.css" type="text/css" media="print">' );
+</script>
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<![endif]-->
+</head>
+
+<body>
+
+<!-- <img id="clouds1" src="img/clouds1.png" /> -->
+<!-- <img id="clouds2" src="img/clouds2.png" /> -->
+<!-- <img id="curves" src="img/curves.svg" /> -->
+<!-- <img id="background" src="img/wehkamp-background.jpeg" /> -->
+
+<div class="reveal">
+
+<!-- Any section element inside of this container is displayed as a slide -->
+<div class="slides">
+
+<!-- <div id="logo-background"></div> -->
+<!-- <img id="logo" class="plain logo-still" alt="CODESTAR" src="img/logo-star.svg" /> -->
+
+<section style="height: 100%;">
+<h1>A DEVOOPS STORY: <br> <small> Breaking your entire data platform with a minor version upgrade </small></h1>
+
+<p>
+<h4></h4>
+</p>
+<div id="credits">Built by <a href="">Showtime</a></div>
+</section>
+
+<section>
+<h1>Follow along</h1>
+<h2>Link to the slides</h2>
+<center>
+  <div id="qrcode"></div>
+  <pre id="qrlink"></pre>
+</center>
+<script type="text/javascript">
+var url = window.location.protocol + "//" + window.location.host + window.location.pathname;
+var qrcode = new QRCode(document.getElementById("qrcode"), {
+    text: url,
+    width: 384,
+    height: 384,
+    border: 2,
+    // colorDark : "#10579E",
+    colorDark: "#F17569",
+    colorLight : "#ffffff"
+});
+document.getElementById("qrlink").textContent = url;
+</script>
+</section>
+
+<section>
+  <h1>Contents</h1>
+  <nav id="TOC">
+    <ul>
+    <li><a href="#about">About</a></li>
+    <li><a href="#dev-at-wehkamp">Dev at Wehkamp</a></li>
+    <li><a href="#the-main-character">The main character</a></li>
+    <li><a href="#a-bug">A bug!</a></li>
+    <li><a href="#disaster-strikes">Disaster strikes</a></li>
+    <li><a href="#the-resolution">The Resolution</a></li>
+    <li><a href="#takeaway-points">Takeaway points</a></li>
+    </ul>
+  </nav>
+</section>
+
+<section id="about" class="level1">
+<h1>About</h1>
+<p><img src="img/devoops/codestar-logo.png" style="display: block; margin: auto; background:white; width:50%" /> </br> <img src="img/devoops/wehkamp-logo.png" style="display: block; margin: auto; background:white; width:50%" /></p>
+</section>
+<section id="dev-at-wehkamp" class="level1">
+<h1>Dev at Wehkamp</h1>
+<section id="overview" class="level2">
+<h2>Overview</h2>
+<figure>
+<img src="img/devoops/blaze-team-overview.png" style="display: block; margin: auto; width: 60%" />
+</figure>
+</section>
+<section id="blaze-microservice-platform" class="level2">
+<h2>Blaze microservice platform</h2>
+<figure>
+<img src="img/devoops/stack.png" style="display: block; margin: auto; width: 60%" />
+</figure>
+</section>
+<section id="data-platform" class="level2">
+<h2>Data platform</h2>
+<figure>
+<img src="img/devoops/data-platform.png" style="display: block; margin: auto; width: 60%" />
+</figure>
+</section>
+<section id="monitoring-solutions" class="level2">
+<h2>Monitoring solutions</h2>
+<p><img src="img/devoops/efk.png" style="width:30%" /> <img src="img/devoops/grafana.jpg" style="width:25%" /> <img src="img/devoops/prometheus.jpg" style="width:25%" /></p>
+</section>
+<section id="how-it-fits-together" class="level2">
+<h2>How it fits together:</h2>
+<figure>
+<img src="img/devoops/cockpit.png" alt="Cockpit" style="width:65%" /><figcaption><a href="http://url-on-a-private-network">Cockpit</a></figcaption>
+</figure>
+</section>
+</section>
+<section id="the-main-character" class="level1">
+<h1>The main character</h1>
+<section id="kafka-and-the-product-merge" class="level2">
+<h2>Kafka and the product-merge</h2>
+<figure>
+<img src="img/devoops/product-merge.png" style="width:30%" />
+</figure>
+</section>
+<section id="kafka-details" class="level2">
+<h2>Kafka details</h2>
+<figure>
+<img src="img/devoops/topic.png" style="float:right" />
+</figure>
+<ul>
+<li>Topic</li>
+<li>Partitioning</li>
+<li>ISR</li>
+<li>Compaction</li>
+</ul>
+</section>
+</section>
+<section id="a-bug" class="level1">
+<h1>A bug!</h1>
+<section id="increased-task-durations" class="level2">
+<h2>Increased task durations</h2>
+<figure>
+<img src="img/devoops/airflow.png" style="width:50%" />
+</figure>
+</section>
+<section id="tracking-the-issue-debugging-spark" class="level2">
+<h2>Tracking the issue – Debugging Spark</h2>
+<figure>
+<img src="img/devoops/spark.png" style="width: 85%" />
+</figure>
+</section>
+<section id="tracking-the-issue-checking-kafka" class="level2">
+<h2>Tracking the issue – Checking Kafka</h2>
+<pre><code>blaze-ansible queue-nodes -m raw -a &quot;du -ch /services/kafka/completeProduct-*&quot;
+
+10.200.8.177 | SUCCESS | rc=0 &gt;&gt;
+4.1G    /services/kafka/completeProduct-0
+4.2G    /services/kafka/completeProduct-10
+4.1G    /services/kafka/completeProduct-12
+4.2G    /services/kafka/completeProduct-14
+4.4G    /services/kafka/completeProduct-15
+4.1G    /services/kafka/completeProduct-16
+4.2G    /services/kafka/completeProduct-18
+4.1G    /services/kafka/completeProduct-2
+4.2G    /services/kafka/completeProduct-20
+4.2G    /services/kafka/completeProduct-21
+4.1G    /services/kafka/completeProduct-22
+4.2G    /services/kafka/completeProduct-24
+4.3G    /services/kafka/completeProduct-26
+4.3G    /services/kafka/completeProduct-27
+4.3G    /services/kafka/completeProduct-28
+4.1G    /services/kafka/completeProduct-3
+4.1G    /services/kafka/completeProduct-30
+4.1G    /services/kafka/completeProduct-32
+4.1G    /services/kafka/completeProduct-33
+4.2G    /services/kafka/completeProduct-34
+4.0G    /services/kafka/completeProduct-4
+4.3G    /services/kafka/completeProduct-6
+4.0G    /services/kafka/completeProduct-8
+4.1G    /services/kafka/completeProduct-9
+99G total
+
+10.200.8.176 | SUCCESS | rc=0 &gt;&gt;
+1.8G    /services/kafka/completeProduct-1
+1.9G    /services/kafka/completeProduct-11
+1.8G    /services/kafka/completeProduct-13
+2.0G    /services/kafka/completeProduct-14
+1.9G    /services/kafka/completeProduct-15
+1.7G    /services/kafka/completeProduct-17
+1.8G    /services/kafka/completeProduct-19
+1.9G    /services/kafka/completeProduct-2
+1.9G    /services/kafka/completeProduct-20
+1.9G    /services/kafka/completeProduct-21
+1.8G    /services/kafka/completeProduct-23
+1.9G    /services/kafka/completeProduct-25
+1.8G    /services/kafka/completeProduct-26
+2.1G    /services/kafka/completeProduct-27
+1.7G    /services/kafka/completeProduct-29
+1.8G    /services/kafka/completeProduct-3
+1.9G    /services/kafka/completeProduct-31
+1.8G    /services/kafka/completeProduct-32
+1.8G    /services/kafka/completeProduct-33
+1.7G    /services/kafka/completeProduct-35
+2.0G    /services/kafka/completeProduct-5
+1.8G    /services/kafka/completeProduct-7
+1.7G    /services/kafka/completeProduct-8
+1.9G    /services/kafka/completeProduct-9
+44G total
+
+10.200.8.183 | SUCCESS | rc=0 &gt;&gt;
+3.1G    /services/kafka/completeProduct-0
+78M /services/kafka/completeProduct-1
+3.2G    /services/kafka/completeProduct-10
+286M    /services/kafka/completeProduct-11
+3.1G    /services/kafka/completeProduct-12
+271M    /services/kafka/completeProduct-13
+3.1G    /services/kafka/completeProduct-16
+118M    /services/kafka/completeProduct-17
+3.2G    /services/kafka/completeProduct-18
+146M    /services/kafka/completeProduct-19
+3.1G    /services/kafka/completeProduct-22
+270M    /services/kafka/completeProduct-23
+3.2G    /services/kafka/completeProduct-24
+137M    /services/kafka/completeProduct-25
+3.3G    /services/kafka/completeProduct-28
+100M    /services/kafka/completeProduct-29
+3.1G    /services/kafka/completeProduct-30
+109M    /services/kafka/completeProduct-31
+3.2G    /services/kafka/completeProduct-34
+167M    /services/kafka/completeProduct-35
+3.0G    /services/kafka/completeProduct-4
+197M    /services/kafka/completeProduct-5
+3.3G    /services/kafka/completeProduct-6
+114M    /services/kafka/completeProduct-7
+40G total</code></pre>
+</section>
+<section id="finding-the-root-cause" class="level2">
+<h2>Finding the root cause</h2>
+<pre class="bash"><code>ssh root@&lt;kafka-ip&gt;
+cat /services/log/kafka/log-cleaner.log | grep ERROR | less</code></pre>
+<p>Revealed that we were dealing with broken log compaction <a href="https://issues.apache.org/jira/browse/KAFKA-4497">KAFKA-4497</a></p>
+</section>
+<section id="time-for-an-upgrade" class="level2">
+<h2>Time for an upgrade</h2>
+<p>KAFKA-4497 is fixed in the new Kafka (minor) version 0.10.1.1</p>
+</section>
+</section>
+<section id="disaster-strikes" class="level1">
+<h1>Disaster strikes</h1>
+<section id="a-wild-sold-out-product-appears" class="level2">
+<h2>A wild sold-out product appears!</h2>
+<figure>
+<img src="img/devoops/orders2.png" style="width:60%" />
+</figure>
+</section>
+<section id="devops-tries-to-diagnose" class="level2">
+<h2>Devops tries to diagnose</h2>
+<figure>
+<img src="img/devoops/effective.png" />
+</figure>
+</section>
+<section id="devops-settles-for-a-workaround" class="level2">
+<h2>Devops settles for a workaround</h2>
+<figure>
+<img src="img/devoops/confusion.jpg" />
+</figure>
+</section>
+<section id="devops-settles-for-a-workaround-1" class="level2">
+<h2>Devops settles for a workaround</h2>
+<figure>
+<img src="img/devoops/always-publish.png" style="width:50%" />
+</figure>
+</section>
+</section>
+<section id="the-resolution" class="level1">
+<h1>The Resolution</h1>
+<section id="diagnosing-the-problem" class="level2">
+<h2>Diagnosing the problem</h2>
+<pre class="bash"><code>ssh root@&lt;kafka-broker-ip&gt;
+cat /services/log/kafka/server.log | grep ERROR | less
+
+[2017-04-03 14:16:36,003] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3734742 for partition [completeProduct,13] out of range; reset offset to 3179215 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:36,367] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3688796 for partition [completeProduct,11] out of range; reset offset to 3139765 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:36,786] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3628910 for partition [completeProduct,17] out of range; reset offset to 3098787 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:37,093] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3633348 for partition [completeProduct,1] out of range; reset offset to 3082086 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:37,481] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3706480 for partition [completeProduct,7] out of range; reset offset to 3156826 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:37,785] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3703053 for partition [completeProduct,5] out of range; reset offset to 3142527 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:38,091] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3619023 for partition [completeProduct,35] out of range; reset offset to 3086012 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:38,416] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3714348 for partition [completeProduct,31] out of range; reset offset to 3153547 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:38,752] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3642120 for partition [completeProduct,29] out of range; reset offset to 3103819 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:38,810] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3693406 for partition [completeProduct,19] out of range; reset offset to 3156618 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:39,030] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3625320 for partition [completeProduct,25] out of range; reset offset to 3065658 (kafka.server.ReplicaFetcherThread)
+[2017-04-03 14:16:39,360] ERROR [ReplicaFetcherThread-0-180881591], Current offset 3698289 for partition [completeProduct,23] out of range; reset offset to 3150514 (kafka.server.ReplicaFetcherThread)</code></pre>
+</section>
+<section id="adding-dashboards" class="level2">
+<h2>Adding dashboards</h2>
+<figure>
+<img src="img/devoops/grafana.png" />
+</figure>
+</section>
+<section id="adding-alerts" class="level2">
+<h2>Adding alerts</h2>
+<figure>
+<img src="img/devoops/alert.png" style="width:75%" />
+</figure>
+</section>
+<section id="fixing-logs" class="level2">
+<h2>Fixing logs</h2>
+<figure>
+<img src="img/devoops/logs.png" style="width:75%" />
+</figure>
+</section>
+</section>
+<section id="takeaway-points" class="level1">
+<h1>Takeaway points</h1>
+</section>
+</div>
+</div>
+
+<script src="js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+
+<script>
+  // function animateLogo() {
+  //   var background = document.getElementById("logo-background");
+  //   var logo = document.getElementById("logo");
+  //
+  //   logo.src = "img/logo-animated.svg";
+  //   logo.className = "plain logo-corner";
+  //   background.className += " background-fade-out";
+  //
+  //   if (document.getElementById("pressSpace"))
+  //     document.getElementById("pressSpace").parentElement.removeChild(document.getElementById("pressSpace"));
+  //
+  //   setTimeout(function() {
+  //     background.parentElement.removeChild(background);
+  //   }, 5500);
+  // }
+
+  function initReveal() {
+    // Full list of configuration options available here:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+      width: 1280,
+      height: 720,
+      margin: 0.15,
+      controls: true,
+      progress: true,
+      history: true,
+      center: false,
+      keyboard: false,
+
+    // available themes are in /css/theme
+          theme: Reveal.getQueryHash().theme || 'wehkamp',
+    
+    // default/cube/page/concave/zoom/linear/fade/none
+          transition: Reveal.getQueryHash().transition || 'linear',
+    
+    math: {
+      mathjax: 'js/mathjax/MathJax.js',
+      config: 'TeX-MML-AM_SVG'  // See http://docs.mathjax.org/en/latest/config-files.html
+    },
+
+    // Optional libraries used to extend on reveal.js
+    dependencies: [
+      { src: 'js/classList.js', condition: function() { return !document.body.classList; } },
+      { src: 'plugin/markdown/showdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+      { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+      { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+      { src: 'plugin/math/math.js', async: true },
+      { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+      // { src: 'plugin/remotes/remotes.js', async: true, condition: function() { return !!document.body.classList; } }
+    ]
+    });
+  }
+
+  function inIframe () {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true;
+    }
+  }
+
+  // http://stackoverflow.com/a/11381730
+  function mobileAndTabletcheck () {
+    var check = false;
+    (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino|android|ipad|playbook|silk/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4)))check = true})(navigator.userAgent||navigator.vendor||window.opera);
+    return check;
+  }
+
+  var started = false;
+  initReveal();
+
+  // Maybe also if hash present?
+  if (inIframe() || mobileAndTabletcheck()) {
+    var background = document.getElementById("logo-background");
+    var logo = document.getElementById("logo");
+    background.parentElement.removeChild(background);
+    logo.parentElement.removeChild(logo);
+  } else {
+    var logo = document.getElementById("logo")
+    if(logo !== null) {
+      logo.style.display = "block";
+      var div = document.createElement("div");
+      div.id = "pressSpace";
+      div.innerHTML = "Press SPACE"
+      var parent = document.getElementById("logo").parentElement;
+      parent.insertBefore(div, document.getElementById("logo"));
+      document.addEventListener('keypress', function (e) {
+        if (e.keyCode === 0 || e.keyCode === 32) {
+          e.preventDefault();
+          if (!started) {
+            Reveal.configure({ keyboard: true });
+            animateLogo();
+            started = true;
+          }
+        }
+      }, false);
+    } else {
+      Reveal.configure({ keyboard: true });
+    }
+  }
+
+</script>
+
+</body>
+</html>
