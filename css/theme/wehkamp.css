@@ -7,7 +7,7 @@ html * {
  *********************************************/
 body {
   /*background: #10579E;*/
-  background-image: url("/Users/cko20685/codestar/code/slides/pages/img/wehkamp-background.jpeg");
+  background-image: url('../../img/wehkamp-background.jpeg');
   /*background-color: #10579E; */
 }
 
